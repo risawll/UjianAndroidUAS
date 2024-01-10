@@ -18,9 +18,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        EditText edNamaDepan = (EditText) findViewById(R.id.edNamaDepan);
-        EditText edNamaBelakang = (EditText) findViewById(R.id.edNamaBelakang);
-        Button btnSimpan = (Button) findViewById(R.id.btnSimpan);
+        EditText edNamaDepan = findViewById(R.id.edNamaDepan);
+        EditText edNamaBelakang = findViewById(R.id.edNamaBelakang);
+        EditText edUmur = findViewById(R.id.edUmur);
+        Button btnSimpan = findViewById(R.id.btnSimpan);
 
         ArrayList<String> daftar_nama = new ArrayList<>();
 
@@ -31,15 +32,34 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String isian_nama_depan = edNamaDepan.getText().toString();
                 String isian_nama_belakang = edNamaBelakang.getText().toString();
+                String isian_umur = edUmur.getText().toString();
 
-                if(isian_nama_depan.isEmpty()){
+                if (isian_nama_depan.isEmpty() || isian_nama_belakang.isEmpty() || isian_umur.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Isian masih kosong", Toast.LENGTH_SHORT).show();
-                }else{
-                    String nama_lengkap = isian_nama_depan.concat(" ").concat(isian_nama_belakang);
-                    daftar_nama.clear();
-                    daftar_nama.add(nama_lengkap);
+                } else {
+                    int umur = Integer.parseInt(isian_umur);
+
+                    // Menentukan status berdasarkan umur
+                    String status_umur;
+                    if (umur < 10) {
+                        status_umur = "Anak";
+                    } else if (umur < 20) {
+                        status_umur = "Remaja";
+                    } else if (umur < 40) {
+                        status_umur = "Dewasa";
+                    } else {
+                        status_umur = "Tua";
+                    }
+
+                    // Menambahkan entri ke dalam daftar_nama sebanyak umur yang diinputkan
+                    for (int i = 1; i <= umur; i++) {
+                        String nama_lengkap = isian_nama_depan.concat(" " + isian_nama_belakang).concat(" - ").concat(status_umur);
+                        daftar_nama.add( i + ": " + nama_lengkap);
+                    }
+
                     edNamaDepan.setText("");
                     edNamaBelakang.setText("");
+                    edUmur.setText("");
                     intent_list.putStringArrayListExtra("daftar_nama", daftar_nama);
                     startActivity(intent_list);
                 }
